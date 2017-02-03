@@ -2,9 +2,6 @@
 
 namespace OLC\AIMSUserDriver\Models;
 
-use Illuminate\Database\Eloquent\Model as Model;
-use OLC\AIMSUserDriver\Models\Organization;
-use OLC\AIMSUserDriver\Models\Iped;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
 class User implements AuthenticatableContract
@@ -25,28 +22,27 @@ class User implements AuthenticatableContract
     public function __construct(array $attributes)
     {
         $this->attributes = $attributes;
-        if(array_key_exists('first_name',$attributes) && array_key_exists('last_name',$attributes))
+        if (array_key_exists('first_name', $attributes) && array_key_exists('last_name', $attributes))
         {
-            if(empty($attributes['first_name']) && empty($attributes['last_name']))
+            if (empty($attributes['first_name']) && empty($attributes['last_name']))
             {
                 $this->attributes['name'] = 'EmptyName';
             }
-            else 
+            else
             {
-               $this->attributes['name'] = $attributes['first_name'] . ' ' . $attributes['last_name'];
+                $this->attributes['name'] = $attributes['first_name'] . ' ' . $attributes['last_name'];
             }
         }
     }
 
-
-     public function getUserAttributes()
+    public function getUserAttributes()
     {
         return $this->attributes;
     }
 
     public function getAuthIdentifier()
     {
-        return array_key_exists('id',$this->attributes) ? $this->attributes['id']: null;
+        return array_key_exists('id', $this->attributes) ? $this->attributes['id'] : null;
     }
 
     public function getAuthIdentifierName()
@@ -69,12 +65,12 @@ class User implements AuthenticatableContract
         $this->attributes['remember_token'] = $value;
     }
 
-     public function getRememberTokenName()
+    public function getRememberTokenName()
     {
         return 'remember_token';
     }
 
-     /**
+    /**
      * Check if user has role
      *
      * @param  string  $role
@@ -82,25 +78,25 @@ class User implements AuthenticatableContract
      */
     public function hasRole($role)
     {
-        switch($role)
+        switch ($role)
         {
-            case 'admin':
-                return $this->roles->contains('name','Administrator');
+        case 'admin':
+            return $this->roles->contains('name', 'Administrator') || $this->roles->contains('name', 'Scorecard Administrator');
             break;
-            case 'Institute Member':
-              if(is_object($this->organization_membership) && ($this->organization_membership->membership_type_name == 'Institutional Membership') && $this->organization_membership->membership_type->active)
-               {
-                   return true; 
-               }
+        case 'Institute Member':
+            if (is_object($this->organization_membership) && ($this->organization_membership->membership_type_name == 'Institutional Membership') && $this->organization_membership->membership_type->active)
+                {
+                return true;
+            }
             break;
-            case 'Community Member':
-                 if(is_object($this->membership) && ($this->membership->membership_type_name == 'Community Membership') && $this->membership->membership_type->active)
-               {
-                   return true; 
-               }
-            break; 
-            default: 
-                return $this->roles->contains('name',$role);
+        case 'Community Member':
+            if (is_object($this->membership) && ($this->membership->membership_type_name == 'Community Membership') && $this->membership->membership_type->active)
+                {
+                return true;
+            }
+            break;
+        default:
+            return $this->roles->contains('name', $role);
             break;
         }
     }
@@ -115,7 +111,7 @@ class User implements AuthenticatableContract
         return json_encode($this->attributes);
     }
 
-     /**
+    /**
      * Dynamically access the user's attributes.
      *
      * @param  string  $key
@@ -123,7 +119,7 @@ class User implements AuthenticatableContract
      */
     public function __get($key)
     {
-        return array_key_exists($key, $this->attributes) ?  $this->attributes[$key] : null;
+        return array_key_exists($key, $this->attributes) ? $this->attributes[$key] : null;
     }
 
     /**
