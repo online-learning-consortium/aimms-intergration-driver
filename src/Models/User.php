@@ -3,9 +3,11 @@
 namespace OLC\AIMSUserDriver\Models;
 
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Notifications\Notifiable;
 
 class User implements AuthenticatableContract
 {
+    use Notifiable;
     /**
      * All of the user's attributes.
      *
