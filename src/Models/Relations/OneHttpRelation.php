@@ -64,10 +64,10 @@ class OneHttpRelation extends Relation
     {
         $key = $this->otherKey;
         $fk  = '';
+
         foreach ($models as $model)
         {
-            $key = str_singular($model->table) . '_id';
-
+            $fk = str_singular($model->table) . '_id';
             if (!$model->$key)
             {
                 continue;
@@ -82,9 +82,9 @@ class OneHttpRelation extends Relation
         $this->related = new DummyModel([]);
         foreach ($models as $model)
         {
-            $key = str_singular($model->table) . '_id';
             if (!$model->$key)
             {
+                $model->setRelation($relation, null);
                 continue;
             }
             $model->setRelation($relation, $this->related);
