@@ -49,7 +49,11 @@ class ManyHttpRelations extends Relation
             $fkCollection = collect($fkMap);
             $fkCollection->each(function ($item) use ($pivotValues, $fk, $users)
             {
-                $user        = $users->where('id', $item['user_id'])->first();
+                $user = $users->where('id', $item['user_id'])->first();
+                if (!$user)
+                {
+                    return;
+                }
                 $user->pivot = new Pivot($item['parent'], $pivotValues[$user->id], $fk);
                 $item['parent']->users->push($user);
             });

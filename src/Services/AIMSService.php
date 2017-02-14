@@ -29,7 +29,15 @@ class AIMSService extends Networking
     {
         if (array_key_exists('body', $data))
         {
+            if ($data['body'] == 'Not Found')
+            {
+                dd('failed');
+            }
             return $data['body'];
+        }
+        else
+        {
+            dd($data);
         }
         return null;
     }
