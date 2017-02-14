@@ -86,6 +86,11 @@ class User implements AuthenticatableContract
      */
     public function hasRole($role)
     {
+        if ($this->roles->contains('name', 'Administrator'))
+        {
+            return true;
+        }
+
         switch ($role)
         {
         case 'admin':
