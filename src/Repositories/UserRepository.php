@@ -32,6 +32,10 @@ class UserRepository
                 $user->roles->push(new Role($role));
             }
         }
+        if (array_key_exists('permissions', $userResponse))
+        {
+            $user->permissions = collect($userResponse['permissions']);
+        }
         if (array_key_exists('membership', $userResponse) && $userResponse['membership'] != null)
         {
             $membership       = $userResponse['membership'];
@@ -75,15 +79,9 @@ class UserRepository
         return collect(array_map([$this, 'map'], $this->service->usersBy($ids)));
     }
 
-    public function whereRole($role)
-    {
-        return collect(array_map([$this, 'map'], $this->service->getUsersByRole($role)));
-    }
-
     public function register($data)
     {
         $response = $this->service->register($data);
-        info($response);
         if (array_key_exists('errors', $response))
         {
             return $response;
