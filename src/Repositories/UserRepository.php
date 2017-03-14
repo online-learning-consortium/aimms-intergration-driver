@@ -23,19 +23,17 @@ class UserRepository
         {
             return;
         }
-        $user = new User($userResponse);
+        $user        = new User($userResponse);
+        $user->roles = collect();
         if (array_key_exists('roles', $userResponse))
         {
-            $user->roles = collect();
             foreach ($userResponse['roles'] as $role)
             {
                 $user->roles->push(new Role($role));
             }
         }
-        if (array_key_exists('permissions', $userResponse))
-        {
-            $user->permissions = collect($userResponse['permissions']);
-        }
+        $user->permissions = array_key_exists('permissions', $userResponse) ? collect($userResponse['permissions']) : collect();
+
         if (array_key_exists('membership', $userResponse) && $userResponse['membership'] != null)
         {
             $membership       = $userResponse['membership'];
