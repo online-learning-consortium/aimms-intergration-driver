@@ -3,12 +3,9 @@
 namespace OLC\AIMSUserDriver\Models;
 
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Notifications\Notifiable;
-use OLC\AIMSUserDriver\Repositories\UserRepository;
 
 class User implements AuthenticatableContract
 {
-    use Notifiable;
     /**
      * All of the user's attributes.
      *
@@ -73,11 +70,6 @@ class User implements AuthenticatableContract
         return 'remember_token';
     }
 
-    public static function find($id)
-    {
-        return app(UserRepository::class)->find($id);
-    }
-
     /**
      * Check if user has role
      *
@@ -86,15 +78,10 @@ class User implements AuthenticatableContract
      */
     public function hasRole($role)
     {
-        if ($this->roles->contains('name', 'Administrator'))
-        {
-            return true;
-        }
-
         switch ($role)
         {
         case 'admin':
-            return $this->roles->contains('name', 'Administrator') || $this->roles->contains('name', 'Scorecard Administrator');
+            return $this->roles->contains('name', 'Administrator');
             break;
         case 'Institute Member':
             if (is_object($this->organization_membership) && ($this->organization_membership->membership_type_name == 'Institutional Membership') && $this->organization_membership->membership_type->active)
@@ -112,6 +99,15 @@ class User implements AuthenticatableContract
             return $this->roles->contains('name', $role);
             break;
         }
+    }
+    /**
+     * Check if user a permission by a specific key.
+     * @param  [type]  $key "name" column of permission ex: departments.{id}.moderator
+     * @return boolean
+     */
+    public function hasPermission($key)
+    {
+        return $this->permissions->contains('name', $key) ? true : false;
     }
 
     public function toArray()
