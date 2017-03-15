@@ -3,6 +3,7 @@
 namespace OLC\AIMSUserDriver\Models;
 
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use OLC\AIMSUserDriver\Repositories\UserRepository;
 
 class User implements AuthenticatableContract
 {
@@ -68,6 +69,11 @@ class User implements AuthenticatableContract
     public function getRememberTokenName()
     {
         return 'remember_token';
+    }
+
+    public function find($id)
+    {
+        return app(UserRepository::class)->find($id);
     }
 
     /**
