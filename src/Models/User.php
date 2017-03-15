@@ -71,7 +71,7 @@ class User implements AuthenticatableContract
         return 'remember_token';
     }
 
-    public function find($id)
+    public static function find($id)
     {
         return app(UserRepository::class)->find($id);
     }
