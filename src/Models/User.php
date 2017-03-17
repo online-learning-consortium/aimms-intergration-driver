@@ -129,7 +129,7 @@ class User implements AuthenticatableContract
     public function canManageOrganization()
     {
         $orgKey = $this->getOrganizationKey();
-        if (isset($organization) && ($user->hasPermission($key) || $user->isAdmin))
+        if (isset($organization) && ($user->hasPermission($key) || $user->hasRole('admin')))
         {
             return true;
         }
