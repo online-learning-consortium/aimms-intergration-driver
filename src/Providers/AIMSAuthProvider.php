@@ -1,9 +1,8 @@
 <?php namespace OLC\AIMSUserDriver\Providers;
 
-use Illuminate\Auth\UserInterface;
-use  Illuminate\Contracts\Auth\UserProvider;
-use OLC\AIMSUserDriver\Repositories\UserRepository;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\UserProvider;
+use OLC\AIMSUserDriver\Repositories\UserRepository;
 
 class AIMSAuthProvider implements UserProvider
 {
@@ -16,15 +15,15 @@ class AIMSAuthProvider implements UserProvider
 
     public function retrieveById($identifier)
     {
-       $user =  $this->userRepository->find($identifier); 
-        $old = session('userLoggedIn');
-        session('userLoggedIn', ($old  + 1));
+        $user = $this->userRepository->find($identifier);
+        $old  = session('userLoggedIn');
+        session('userLoggedIn', ($old + 1));
         return $user;
     }
 
     public function retrieveByToken($identifier, $token)
     {
-        $user =  $this->userRepository->find($identifier); 
+        $user = $this->userRepository->find($identifier);
         return $user;
     }
 
@@ -33,23 +32,24 @@ class AIMSAuthProvider implements UserProvider
         $user->token = $token;
         return $user;
     }
-    //This is the array passed to the login area. 
+    //This is the array passed to the login area.
     public function retrieveByCredentials(array $credentials)
     {
-         if (empty($credentials)) {
+        if (empty($credentials))
+        {
             return;
         }
 
-        if(array_key_exists('password',$credentials) && array_key_exists('email',$credentials))
+        if (array_key_exists('password', $credentials) && array_key_exists('email', $credentials))
         {
-           $user =  $this->userRepository->login($credentials['email'],$credentials['password']);
-           return $user;
+            $user = $this->userRepository->login($credentials['email'], $credentials['password']);
+            return $user;
         }
         return null;
     }
 
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
-          return empty($user->errors);
+        return empty($user->errors);
     }
 }

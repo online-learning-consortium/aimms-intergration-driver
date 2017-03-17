@@ -125,7 +125,7 @@ class User implements AuthenticatableContract
         {
             return 'null';
         }
-        $organization                    = app(OrganizationRepository::class)->find($user->organization->id);
+        $organization                    = app(OrganizationRepository::class)->find($this->organization->id);
         $this->organizationPermissionKey = "organization.{$organization->id}.admin";
         return $this->organizationPermissionKey;
     }
@@ -133,7 +133,7 @@ class User implements AuthenticatableContract
     public function canManageOrganization()
     {
         $orgKey = isset($this->organizationPermissionKey) ? $this->organizationPermissionKey : $this->getOrganizationKey();
-        if (isset($organization) && ($user->hasPermission($key) || $user->hasRole('admin')))
+        if (isset($organization) && ($this->hasPermission($key) || $this->hasRole('admin')))
         {
             return true;
         }
