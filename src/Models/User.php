@@ -3,6 +3,7 @@
 namespace OLC\AIMSUserDriver\Models;
 
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use OLC\AIMSUserDriver\Repositories\OrganizationRepository;
 use OLC\AIMSUserDriver\Repositories\UserRepository;
 
 class User implements AuthenticatableContract
