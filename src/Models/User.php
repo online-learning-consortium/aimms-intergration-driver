@@ -116,6 +116,26 @@ class User implements AuthenticatableContract
         return $this->permissions->contains('name', $key) ? true : false;
     }
 
+    public function getOrganizationKey()
+    {
+        if (!isset($this->organization))
+        {
+            return 'null';
+        }
+        $organization = app(OrganizationRepository::class)->find($user->organization->id);
+        return "organization.{$organization->id}.admin";
+    }
+
+    public function canManageOrganization()
+    {
+        $orgKey = $this->getOrganizationKey();
+        if (isset($organization) && ($user->hasPermission($key) || $user->isAdmin))
+        {
+            return true;
+        }
+        return false;
+    }
+
     public function toArray()
     {
         return $this->attributes;
