@@ -4,6 +4,7 @@ use OLC\AIMSUserDriver\Models\Membership;
 use OLC\AIMSUserDriver\Models\MembershipType;
 use OLC\AIMSUserDriver\Models\Organization;
 use OLC\AIMSUserDriver\Models\OrganizationMembership;
+use OLC\AIMSUserDriver\Models\Permission;
 use OLC\AIMSUserDriver\Models\Role;
 use OLC\AIMSUserDriver\Models\User;
 use OLC\AIMSUserDriver\Services\AIMSService;
@@ -32,8 +33,14 @@ class UserRepository
                 $user->roles->push(new Role($role));
             }
         }
-        $user->permissions = array_key_exists('permissions', $userResponse) ? collect($userResponse['permissions']) : collect();
-
+        if (array_key_exists('permissions', $userResponse))
+        {
+            $user->permissions = collect();
+            foreach ($userResponse['permissions'] as $permission)
+            {
+                $user->permissions->push(new Permission($permission));
+            }
+        }
         if (array_key_exists('membership', $userResponse) && $userResponse['membership'] != null)
         {
             $membership       = $userResponse['membership'];

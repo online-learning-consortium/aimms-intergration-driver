@@ -16,6 +16,7 @@ class User implements AuthenticatableContract
     protected $attributes;
 
     public $organizationPermissionKey;
+    public $organization;
 
     /**
      * Create a new generic User object.
@@ -114,9 +115,9 @@ class User implements AuthenticatableContract
      * @param  [type]  $key "name" column of permission ex: departments.{id}.moderator
      * @return boolean
      */
-    public function hasPermission($key)
+    public function hasPermission($permissionKey)
     {
-        return $this->permissions->contains('name', $key) ? true : false;
+        return $this->permissions->contains('name', $permissionKey);
     }
 
     public function getOrganizationKey()
@@ -125,15 +126,15 @@ class User implements AuthenticatableContract
         {
             return 'null';
         }
-        $organization                    = app(OrganizationRepository::class)->find($this->organization->id);
-        $this->organizationPermissionKey = "organization.{$organization->id}.admin";
+        $this->organization              = app(OrganizationRepository::class)->find($this->organization->id);
+        $this->organizationPermissionKey = "organizations.{$this->organization->id}.admin";
         return $this->organizationPermissionKey;
     }
 
     public function canManageOrganization($adminRole = 'admin')
     {
         $orgKey = isset($this->organizationPermissionKey) ? $this->organizationPermissionKey : $this->getOrganizationKey();
-        if (isset($organization) && ($this->hasPermission($key) || $this->hasRole($adminRole))
+        if (isset($this->organization) && ($this->hasPermission($orgKey) || $this->hasRole($adminRole)))
         {
             return true;
         }
