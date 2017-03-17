@@ -122,11 +122,11 @@ class User implements AuthenticatableContract
 
     public function getOrganizationKey()
     {
-        if (!isset($this->organization))
+        if (!array_key_exists('organization', $this->attributes))
         {
             return 'null';
         }
-        $this->organization              = app(OrganizationRepository::class)->find($this->organization->id);
+        $this->organization              = app(OrganizationRepository::class)->find($this->attributes['organization']->id);
         $this->organizationPermissionKey = "organizations.{$this->organization->id}.admin";
         return $this->organizationPermissionKey;
     }
