@@ -130,10 +130,10 @@ class User implements AuthenticatableContract
         return $this->organizationPermissionKey;
     }
 
-    public function canManageOrganization()
+    public function canManageOrganization($adminRole = 'admin')
     {
         $orgKey = isset($this->organizationPermissionKey) ? $this->organizationPermissionKey : $this->getOrganizationKey();
-        if (isset($organization) && ($this->hasPermission($key) || $this->hasRole('admin')))
+        if (isset($organization) && ($this->hasPermission($key) || $this->hasRole($adminRole))
         {
             return true;
         }
