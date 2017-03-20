@@ -20,6 +20,8 @@ class User implements AuthenticatableContract
     public $organizationPermissionKey;
     public $organization;
 
+    public $slackHook;
+
     /**
      * Create a new generic User object.
      *
@@ -185,6 +187,11 @@ class User implements AuthenticatableContract
     public function __isset($key)
     {
         return isset($this->attributes[$key]);
+    }
+
+    public function routeNotificationForSlack()
+    {
+        return $this->slackHook;
     }
 
     /**
