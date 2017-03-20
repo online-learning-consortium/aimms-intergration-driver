@@ -130,7 +130,8 @@ class User implements AuthenticatableContract
         {
             return 'null';
         }
-        $this->organization              = app(OrganizationRepository::class)->find($this->attributes['organization']->id);
+
+        $this->organization              = app(OrganizationRepository::class)->find($this->attributes['organization']['id']);
         $this->organizationPermissionKey = "organizations.{$this->organization->id}.admin";
         return $this->organizationPermissionKey;
     }
