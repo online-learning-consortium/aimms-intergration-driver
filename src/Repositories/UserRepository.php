@@ -79,6 +79,11 @@ class UserRepository
         return $this->map($response);
     }
 
+    public function whereRole($role)
+    {
+        return collect(array_map([$this, 'map'], $this->service->getUsersByRole($role)));
+    }
+
     public function whereIds(array $ids)
     {
         return collect(array_map([$this, 'map'], $this->service->usersBy($ids)));
