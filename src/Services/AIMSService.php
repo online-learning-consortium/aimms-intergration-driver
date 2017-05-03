@@ -122,6 +122,6 @@ class AIMSService extends Networking
         $endpoint               = $this->userPrefix2;
         $this->options['query'] = true;
         $this->options['body']  = false;
-        return $this->readResponse($this->send(['id' => $ids], $endpoint, 'get'));
+        return $this->readResponse($this->send([$type => $ids], $endpoint, 'get'));
     }
 }
