@@ -24,7 +24,7 @@ class UserRepository
         {
             return;
         }
-        $user        = new User($userResponse);
+        $user        = app(config('auth.model'), ['attributes' => $userResponse]);
         $user->roles = collect();
         if (array_key_exists('roles', $userResponse))
         {
