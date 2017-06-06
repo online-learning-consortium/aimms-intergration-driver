@@ -58,9 +58,16 @@ class AIMSService extends Networking
         return $this->readResponse($this->send(['api_token' => $this->token], $endpoint, 'get'));
     }
 
-    public function register($data)
+    public function register($data, $tokenized = false)
     {
-        $this->url                             = $this->baseUrl . $this->userPrefix . "?api_token={$this->token}";
+        if ($tokenized)
+        {
+            $this->url = $this->baseUrl . $this->userPrefix . '/provision/token' . "?api_token={$this->token}";
+        }
+        else
+        {
+            $this->url = $this->baseUrl . $this->userPrefix . "?api_token={$this->token}";
+        }
         $response                              = null;
         $this->request_body                    = $data;
         $this->method                          = 'post';
