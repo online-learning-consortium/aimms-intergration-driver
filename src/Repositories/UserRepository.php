@@ -20,7 +20,7 @@ class UserRepository
 
     public function map($userResponse)
     {
-        if (!$userResponse || $$userResponse == 'No Response Received.' || array_key_exists('message', $userResponse) && $userResponse['message'] == 'No Response Received.')
+        if (!$userResponse || $userResponse == 'No Response Received.' || array_key_exists('message', $userResponse) && $userResponse['message'] == 'No Response Received.')
         {
             return;
         }
