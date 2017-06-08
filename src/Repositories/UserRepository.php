@@ -91,7 +91,12 @@ class UserRepository
 
     public function whereEmails(array $emails)
     {
-        return collect(array_map([$this, 'map'], $this->service->usersBy($emails, 'email')));
+        $r = $this->service->usersBy($emails, 'email');
+        if (!isset($r['message']))
+        {
+            return collect(array_map([$this, 'map'], $r));
+        }
+        return null;
     }
 
     public function register($data)
