@@ -20,11 +20,11 @@ class UserRepository
 
     public function map($userResponse)
     {
-        if (!$userResponse || array_key_exists('message', $userResponse) && $userResponse['message'] == 'No Response Received.')
+        if (!$userResponse || $$userResponse == 'No Response Received.' || array_key_exists('message', $userResponse) && $userResponse['message'] == 'No Response Received.')
         {
             return;
         }
-        $user        = app(config('auth.model'), ['attributes' => $userResponse]);
+        $user        = new User($userResponse);
         $user->roles = collect();
         if (array_key_exists('roles', $userResponse))
         {
