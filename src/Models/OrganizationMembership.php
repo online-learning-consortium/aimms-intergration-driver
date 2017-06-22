@@ -25,6 +25,14 @@ class OrganizationMembership extends Model
      * @var array
      */
     protected $appends = [];
+    
+        /**
+     * @return boolean
+     */
+    public function expired()
+    {
+        return \Carbon\Carbon::now()->gte(\Carbon\Carbon::parse($this->end_at));
+    }
 
 
 }
