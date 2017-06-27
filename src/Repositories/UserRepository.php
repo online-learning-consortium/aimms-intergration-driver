@@ -20,11 +20,11 @@ class UserRepository
 
     public function map($userResponse)
     {
-        if (!$userResponse || $userResponse == 'No Response Received.' || array_key_exists('message', $userResponse) && $userResponse['message'] == 'No Response Received.')
+        if (!$userResponse || array_key_exists('message', $userResponse) && $userResponse['message'] == 'No Response Received.')
         {
             return;
         }
-        $user        = new User($userResponse);
+        $user        = app(config('auth.model'), ['attributes' => $userResponse]);
         $user->roles = collect();
         if (array_key_exists('roles', $userResponse))
         {
@@ -91,12 +91,7 @@ class UserRepository
 
     public function whereEmails(array $emails)
     {
-        $r = $this->service->usersBy($emails, 'email');
-        if (!isset($r['message']))
-        {
-            return collect(array_map([$this, 'map'], $r));
-        }
-        return null;
+        return collect(array_map([$this, 'map'], $this->service->usersBy($emails, 'email')));
     }
 
     public function register($data)
