@@ -19,6 +19,7 @@ class AIMSService extends Networking
         $this->orgPrefix        = config('services.aims.orgPrefix');
         $this->userPrefix       = config('services.aims.userPrefix');
         $this->userPrefix2      = config('services.aims.userPrefix2');
+        $this->membershipPrefix = config('services.aims.membershipPrefix');
         $this->options['query'] = true;
         parent::__construct();
         $this->events                 = null;
@@ -42,6 +43,31 @@ class AIMSService extends Networking
         return null;
     }
 
+    public function jsonRequest($data)
+    {
+        $response                              = null;
+        $this->request_body                    = $data;
+        $this->method                          = 'post';
+        $this->request_headers['content-type'] = 'application/json';
+        try {
+            $response = $this->createStreamRequest();
+        }
+        catch (RequestException $e)
+        {
+            if ($e->hasResponse())
+            {
+                $response = $e->getResponse()->getBody();
+            }
+        }
+        return $response;
+    }
+
+    public function postMembership($data)
+    {
+        $this->url = $this->baseUrl . $this->membershipPrefix . "?api_token={$this->token}";
+        return $this->jsonRequest($data);
+    }
+
     public function getOrganization($id)
     {
         $endpoint               = $this->orgPrefix . "/" . $id;
@@ -52,7 +78,7 @@ class AIMSService extends Networking
 
     public function organizationsBy($membershipType)
     {
-        $endpoint               = $this->memberPrefix . "/{$membershipType}";
+        $endpoint               = $this->membershipPrefix . "/{$membershipType}";
         $this->options['query'] = true;
         $this->options['body']  = false;
         return $this->readResponse($this->send(['api_token' => $this->token], $endpoint, 'get'));
@@ -60,22 +86,8 @@ class AIMSService extends Networking
 
     public function register($data)
     {
-        $this->url                             = $this->baseUrl . $this->userPrefix . "?api_token={$this->token}";
-        $response                              = null;
-        $this->request_body                    = $data;
-        $this->method                          = 'post';
-        $this->request_headers['content-type'] = 'application/json';
-        try {
-            $response = $this->createStreamRequest()->json();
-        }
-        catch (RequestException $e)
-        {
-            if ($e->hasResponse())
-            {
-                $response = $e->getResponse()->json();
-            }
-        }
-        return $response;
+        $this->url = $this->baseUrl . $this->userPrefix . "?api_token={$this->token}";
+        return $this->jsonRequest($data);
     }
 
     public function login($user, $password)
