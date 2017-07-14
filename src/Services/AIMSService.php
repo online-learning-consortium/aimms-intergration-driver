@@ -50,13 +50,13 @@ class AIMSService extends Networking
         $this->method                          = 'post';
         $this->request_headers['content-type'] = 'application/json';
         try {
-            $response = $this->createStreamRequest()->json();
+            $response = $this->createStreamRequest();
         }
         catch (RequestException $e)
         {
             if ($e->hasResponse())
             {
-                $response = $e->getResponse()->json();
+                $response = $e->getResponse()->getBody();
             }
         }
         return $response;
@@ -64,7 +64,7 @@ class AIMSService extends Networking
 
     public function postMembership($data)
     {
-        $endpoint = $this->membershipPrefix;
+        $this->url = $this->baseUrl . $this->membershipPrefix . "?api_token={$this->token}";
         return $this->jsonRequest($data);
     }
 
@@ -78,7 +78,7 @@ class AIMSService extends Networking
 
     public function organizationsBy($membershipType)
     {
-        $endpoint               = $this->orgPrefix . "/list/{$membershipType}";
+        $endpoint               = $this->membershipPrefix . "/{$membershipType}";
         $this->options['query'] = true;
         $this->options['body']  = false;
         return $this->readResponse($this->send(['api_token' => $this->token], $endpoint, 'get'));
