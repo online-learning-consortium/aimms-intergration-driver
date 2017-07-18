@@ -117,7 +117,10 @@ class ManyHttpRelations extends Relation
 
         foreach ($results as $result)
         {
-            $dictionary[$result->pivot->$foreign][] = $result;
+            if (isset($result->pivot))
+            {
+                $dictionary[$result->pivot->$foreign][] = $result;
+            }
         }
 
         return $dictionary;
