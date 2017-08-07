@@ -16,12 +16,4 @@ trait BelongsToManyUsers
         return new ManyHttpRelations($builder, $this);
     }
 
-    public function getUsersAttribute()
-    {
-        if (isset($this->attributes['users']))
-        {
-            return $this->attributes['users'];
-        }
-        return collect();
-    }
 }
