@@ -56,7 +56,11 @@ class AIMSService extends Networking
         {
             if ($e->hasResponse())
             {
-                $response = $e->getResponse()->getBody();
+                $response = json_decode((String) $e->getResponse()->getBody(), true);
+                if (!isset($response))
+                {
+                    $response = ['data' => ['errors' => 'unsure']];
+                }
             }
         }
         return $response;
