@@ -54,8 +54,15 @@ class ManyHttpRelations extends Relation
                 {
                     return;
                 }
-                $user->pivot = new Pivot($item['parent'], $pivotValues[$user->id], $fk);
                 $item['parent']->users->push($user);
+
+                if (is_object($item['parent']))
+                {
+                    $item['parent'] = $item['parent']->toArray();
+                }
+
+                $user->pivot = new Pivot($item['parent'], $pivotValues[$user->id], $fk);
+
             });
             $users = $users->toArray();
         }
