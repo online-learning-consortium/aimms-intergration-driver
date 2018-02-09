@@ -6,8 +6,11 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Notifications\Notifiable;
 use OLC\AIMSUserDriver\Repositories\OrganizationRepository;
 use OLC\AIMSUserDriver\Repositories\UserRepository;
+use Carbon\Carbon;
+use Illuminate\Contracts\Support\Arrayable;
 
-class User implements AuthenticatableContract
+
+class User implements AuthenticatableContract,Arrayable
 {
     use Notifiable;
     /**
@@ -42,6 +45,8 @@ class User implements AuthenticatableContract
                 $this->attributes['name'] = $attributes['first_name'] . ' ' . $attributes['last_name'];
             }
         }
+        $this->attributes['created_at'] = Carbon::now();
+        $this->attributes['updated_at'] = Carbon::now();
     }
 
     public function getUserAttributes()
@@ -148,7 +153,10 @@ class User implements AuthenticatableContract
 
     public function toArray()
     {
-        return $this->attributes;
+        //Unset To Prevent Recursiveness
+        $copy = $this->attributes;
+        unset($copy['pivot']);
+        return $copy;
     }
 
     public function toJson()
@@ -205,5 +213,6 @@ class User implements AuthenticatableContract
     {
         unset($this->attributes[$key]);
     }
+
 
 }
