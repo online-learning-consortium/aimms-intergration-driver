@@ -85,7 +85,7 @@ class AIMSService extends Networking
         $endpoint               = $this->membershipPrefix . "/{$membershipType}";
         $this->options['query'] = true;
         $this->options['body']  = false;
-        return $this->readResponse($this->send(['api_token' => $this->token], $endpoint, 'get'));
+        return $this->readResponse($this->send(['api_token' => $this->token, 'limit' => 700], $endpoint, 'get'));
     }
 
     public function register($data)
