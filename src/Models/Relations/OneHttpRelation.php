@@ -46,11 +46,8 @@ class OneHttpRelation extends Relation
                 if ($model = $this->repository->find($key))
                 {
                     $name = $foreign['fk_name'];
-                    if (is_object($foreign['parent']))
-                    {
-                        $foreign['parent'] = $foreign['parent']->toArray();
-                    }
-                    $model->pivot = new Pivot($foreign['parent'], [$name => $foreign['fk_value']], $this->table);
+                    $pivot = new Pivot;
+                    $model->pivot = $pivot->fromAttributes($foreign['parent'], [$name => $foreign['fk_value']], $this->table);
                     Cache::forever($prefix . $key, $model);
                 }
             }
