@@ -173,7 +173,8 @@ class ManyHttpRelations extends Relation
         DB::table($btmUsersTable)->insert([array_merge($attributes, ['user_id' => $id, $fk => $this->parent->id])]);
         $user        = app(UserRepository::class)->find($id);
         $pivotValues = DB::table($btmUsersTable)->where($fk, $this->parent->id)->where('user_id', $id)->first();
-        $user->pivot = new Pivot($this->parent->toArray(), json_decode(json_encode($pivotValues), true), $fk);
+        $pivot = new Pivot;
+        $user->pivot = $pivot->fromAttributes($this->parent, json_decode(json_encode($pivotValues), true), $fk);
         if (!$this->parent->relationLoaded('users'))
         {
             $dm         = new DummyModel([]);
