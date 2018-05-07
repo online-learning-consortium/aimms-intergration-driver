@@ -5,7 +5,6 @@ use GuzzleHttp\Exception\RequestException;
 
 class AIMSService extends Networking
 {
-
     public $baseUrl;
     public $token;
     public $orgPrefix;
@@ -28,16 +27,12 @@ class AIMSService extends Networking
     }
     public function readResponse($data)
     {
-        if (array_key_exists('body', $data))
-        {
-            if ($data['body'] == 'Not Found')
-            {
+        if (array_key_exists('body', $data)) {
+            if ($data['body'] == 'Not Found') {
                 dd('failed');
             }
             return $data['body'];
-        }
-        else
-        {
+        } else {
             dd($data);
         }
         return null;
@@ -51,14 +46,10 @@ class AIMSService extends Networking
         $this->request_headers['content-type'] = 'application/json';
         try {
             $response = $this->createStreamRequest();
-        }
-        catch (RequestException $e)
-        {
-            if ($e->hasResponse())
-            {
+        } catch (RequestException $e) {
+            if ($e->hasResponse()) {
                 $response = json_decode((String) $e->getResponse()->getBody(), true);
-                if (!isset($response))
-                {
+                if (!isset($response)) {
                     $response = ['data' => ['errors' => 'unsure']];
                 }
             }
@@ -122,7 +113,7 @@ class AIMSService extends Networking
         $endpoint               = $this->userPrefix2 . "/?_q=$value";
         $this->options['query'] = true;
         $this->options['body']  = false;
-        return $this->readResponse($this->send([], $endpoint, 'get'));
+        return $this->readResponse($this->send(['api_token' => $this->token], $endpoint, 'get'));
     }
 
     public function getUser($id)
@@ -138,6 +129,6 @@ class AIMSService extends Networking
         $endpoint               = $this->userPrefix2;
         $this->options['query'] = true;
         $this->options['body']  = false;
-        return $this->readResponse($this->send([$type => $ids], $endpoint, 'get'));
+        return $this->readResponse($this->send(['api_token' => $this->token,$type => $ids], $endpoint, 'get'));
     }
 }
