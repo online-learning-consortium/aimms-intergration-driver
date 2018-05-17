@@ -102,18 +102,18 @@ class AIMSService extends Networking
 
     public function getUserWhere($column, $value)
     {
-        $endpoint               = $this->userPrefix2+"/?$column-like=$value";
+        $endpoint               = $this->userPrefix2;
         $this->options['query'] = true;
         $this->options['body']  = false;
-        return $this->readResponse($this->send(['api_token' => $this->token], $endpoint, 'get'));
+        return $this->readResponse($this->send(['api_token' => $this->token, "$column-like" => $value], $endpoint, 'get'));
     }
 
     public function searchUsers($value)
     {
-        $endpoint               = $this->userPrefix2 . "/?_q=$value";
+        $endpoint               = $this->userPrefix2;
         $this->options['query'] = true;
         $this->options['body']  = false;
-        return $this->readResponse($this->send(['api_token' => $this->token], $endpoint, 'get'));
+        return $this->readResponse($this->send(['api_token' => $this->token, '_q' => $value], $endpoint, 'get'));
     }
 
     public function getUser($id)
