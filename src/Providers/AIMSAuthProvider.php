@@ -16,8 +16,6 @@ class AIMSAuthProvider implements UserProvider
     public function retrieveById($identifier)
     {
         $user = $this->userRepository->find($identifier);
-        $old  = session('userLoggedIn');
-        session('userLoggedIn', ($old + 1));
         return $user;
     }
 
@@ -51,5 +49,10 @@ class AIMSAuthProvider implements UserProvider
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
         return empty($user->errors);
+    }
+
+    public function __toString()
+    {
+        return 'aimms';
     }
 }
