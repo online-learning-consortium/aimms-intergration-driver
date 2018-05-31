@@ -8,11 +8,13 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Auth\SessionGuard;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Contracts\Session\Session;
+use Cookie;
 
 class AIMSGaurd extends SessionGuard
 {
 
-    public function __construct($name = null,AIMSAuthProvider $aimsAuthProvider, SessionInterface $session,Request $request = null)
+    public function __construct($name = null,AIMSAuthProvider $aimsAuthProvider, Session $session,Request $request = null)
     {
         if($name == null)
         {
@@ -58,7 +60,7 @@ class AIMSGaurd extends SessionGuard
      */
     public function user()
     {
-        if ($this->loggedOut) 
+        if ($this->loggedOut)
         {
             return;
         }
@@ -70,7 +72,8 @@ class AIMSGaurd extends SessionGuard
             return $this->user;
         }
 
-        $id = $this->session->get($this->getName());
+        $id = Cookie::get(config('auth.cookie_name'));
+
 
         // First we will try to load the user using the identifier in the session if
         // one exists. Otherwise we will check for a "remember me" cookie in this
@@ -84,7 +87,7 @@ class AIMSGaurd extends SessionGuard
         // If the user is null, but we decrypt a "recaller" cookie we can attempt to
         // pull the user data on that cookie which serves as a remember cookie on
         // the application. Once we have a user we can return it to the caller.
-        $recaller = $this->getRecaller();
+        $recaller = $this->recaller();
 
         if (is_null($user) && ! is_null($recaller)) {
             $user = $this->getUserByRecaller($recaller);
