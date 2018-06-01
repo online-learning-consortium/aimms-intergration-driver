@@ -9,6 +9,7 @@ use Illuminate\Auth\SessionGuard;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Contracts\Session\Session;
+use Illuminate\Contracts\Encryption\Encrypter;
 use Cookie;
 
 class AIMSGaurd extends SessionGuard
@@ -74,11 +75,16 @@ class AIMSGaurd extends SessionGuard
 
         $id = Cookie::get(config('auth.cookie_name'));
 
-
         // First we will try to load the user using the identifier in the session if
         // one exists. Otherwise we will check for a "remember me" cookie in this
         // request, and if one exists, attempt to retrieve the user using that.
         $user = null;
+
+        if(!is_int($id))
+        {
+            $encrypter = app(Encrypter::class);
+            $id = $encrypter->decrypt($id);
+        }
 
         if (! is_null($id)) {
             $user = $this->provider->retrieveById($id);
