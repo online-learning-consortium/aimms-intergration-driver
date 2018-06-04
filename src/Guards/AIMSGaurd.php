@@ -82,8 +82,14 @@ class AIMSGaurd extends SessionGuard
 
         if(!is_int($id))
         {
-            $encrypter = app(Encrypter::class);
-            $id = $encrypter->decrypt($id);
+            try{
+               $encrypter = app(Encrypter::class);
+               $id = $encrypter->decrypt($id);
+            }
+            catch(\Exception $e) 
+            {
+                
+            }
         }
 
         if (! is_null($id)) {
