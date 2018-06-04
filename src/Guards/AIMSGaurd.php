@@ -80,19 +80,19 @@ class AIMSGaurd extends SessionGuard
         // request, and if one exists, attempt to retrieve the user using that.
         $user = null;
 
-        if(!is_int($id))
+        if(!is_numeric($id))
         {
             try{
                $encrypter = app(Encrypter::class);
                $id = $encrypter->decrypt($id);
             }
-            catch(\Exception $e) 
+            catch(\Exception $e)
             {
-                
+               return null;
             }
         }
 
-        if (! is_null($id)) {
+        if (! is_null($id) && is_numeric($id)) {
             $user = $this->provider->retrieveById($id);
         }
 
