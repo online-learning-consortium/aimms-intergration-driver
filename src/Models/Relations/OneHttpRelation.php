@@ -127,7 +127,8 @@ class OneHttpRelation extends Relation
 
     public function getResults()
     {
-        return $this->get();
+        $fk = $this->otherKey;
+        $idOfRelatedModel = $this->parent->{$fk};
+        return $this->repository->find($idOfRelatedModel);
     }
-
 }
